@@ -14,8 +14,27 @@
  * }
  */
 class Solution {
-    List<String> res;
     String best;
+
+    private int compareStrings(String s1 , String s2){
+        int minLength = Math.min(s1.length() , s2.length());
+
+        for(int i = 0 ; i < minLength ; i++){
+            char c1 = s1.charAt(i);
+            char c2 = s2.charAt(i);
+
+            if(c1 > c2){
+                return 1;
+            } else if(c2 > c1){
+                return -1;
+            }
+        }
+
+        if(s1.length() > s2.length()) return 1;
+        else if(s1.length() < s2.length()) return -1;
+        else return 0;
+    }
+
     private boolean isLeaf(TreeNode root){
         return root.left == null && root.right == null;
     }
@@ -25,7 +44,7 @@ class Solution {
         if(isLeaf(root)){
             StringBuilder sb = new StringBuilder(path);
             sb.reverse();
-            if(best.compareTo(sb.toString()) > 0){
+            if(compareStrings(best , sb.toString()) > 0){
                 best = sb.toString();
             }
         }
@@ -38,8 +57,7 @@ class Solution {
     }
 
     public String smallestFromLeaf(TreeNode root) {
-        res = new ArrayList<>();
-        best = "zzzzzzzzzzzzzzzz";
+        best = "zzzzzzzzzzzzzz";
         String path = String.valueOf((char)(root.val + 'a'));
         traverse(root , path);
         return best;
