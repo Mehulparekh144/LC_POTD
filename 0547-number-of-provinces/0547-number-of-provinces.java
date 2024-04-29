@@ -19,7 +19,7 @@ class Solution {
         for(int i = 1 ; i <= isConnected.length ; i++){
             if(!visited[i]){
                 res++;
-                bfs(i , visited, adj);
+                dfs(i , visited, adj);
             }
         }
 
@@ -27,19 +27,12 @@ class Solution {
 
     }
 
-    private void bfs(int start , boolean[] visited , List<List<Integer>> adj){
-        Queue<Integer> q = new LinkedList<>();
-        q.offer(start);
-        visited[start] = true;
-
-        while(!q.isEmpty()){
-            int node = q.poll();
-            for(int child : adj.get(node)){
-                if(!visited[child]){
-                    visited[child] = true;
-                    q.offer(child);
-                }
-            }
-        }
+  private void dfs(int start , boolean[] visited , List<List<Integer>> adj){
+    visited[start] = true;
+    for(int child : adj.get(start)){
+      if(!visited[child]){
+        dfs(child , visited , adj);
+      }
     }
+  }
 }
