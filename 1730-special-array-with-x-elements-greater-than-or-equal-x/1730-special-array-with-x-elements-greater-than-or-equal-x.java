@@ -2,13 +2,20 @@ class Solution {
     public int specialArray(int[] nums) {
         Arrays.sort(nums);
         int n = nums.length;
+        int l = 0;
+        int r = n;
 
-        for(int x = 0; x <= n ; x++){
-          // Find idx of number just greater than equal to x
+        while(l <= r){
+          int x = l + (r-l)/2;
           int idx = lowerBound(nums , x);
-          if(idx == -1) continue;
-          int count = n - idx;
+
+          int count = n-idx;
           if(count == x) return x;
+          else if(count > x){
+            l = x + 1;
+          } else{
+            r = x - 1;
+          }
         }
 
         return -1;
