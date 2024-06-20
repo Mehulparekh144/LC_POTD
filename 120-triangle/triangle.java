@@ -1,25 +1,21 @@
 class Solution {
-    int[][] dp;
     public int minimumTotal(List<List<Integer>> triangle) {
-        dp = new int[triangle.size()][triangle.getLast().size()];
-        for(int[] row : dp) Arrays.fill(row , -1);
-        return solve(0,0, triangle) ;
-    }
+        int[][] dp = new int[triangle.size()][triangle.getLast().size()];
 
-    private int solve(int  i , int j , List<List<Integer>> triangle){
-        if(i < 0 || j < 0 || j > triangle.get(i).size() - 1){
-            return (int) Math.pow(10 , 9);
-        }
-        if(i == triangle.size() - 1){
-            return triangle.get(i).get(j);
+        for(int j = 0 ; j < triangle.getLast().size() ; j++){
+            dp[triangle.size() - 1][j] = triangle.get(triangle.size() - 1).get(j);
         }
 
-        if(dp[i][j] != -1){
-            return dp[i][j];
+        for(int i = triangle.size() - 2 ; i >= 0 ; i--){
+            for(int j = i ; j >= 0 ; j--){
+                int up = triangle.get(i).get(j) + dp[i+1][j];
+                int diagonal = triangle.get(i).get(j) + dp[i+1][j+1];
+                dp[i][j] = Math.min(up , diagonal);
+            }
         }
- 
-        int up = triangle.get(i).get(j) + solve(i+1 , j , triangle);
-        int left = triangle.get(i).get(j) + solve(i+1 , j+1 , triangle);
-        return dp[i][j] = Math.min(up , left);
+
+        return dp[0][0];
+
     }
+
 }
