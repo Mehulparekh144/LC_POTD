@@ -2,30 +2,29 @@ class Solution {
     public int minDistance(String s, String t) {
         int m = s.length();
         int n = t.length();
-        int[][] dp = new int[m + 1][n + 1];
+        int[] prev = new int[n+1];
+        int[] curr = new int[n+1];
 
         for(int j = 0 ; j <= n ; j++){
-            dp[0][j] = j;
+            prev[j] = j;
         } 
 
-        for(int i = 0 ; i <= m ; i++){
-            dp[i][0] = i;
-        }
-
         for(int i = 1 ; i <= m ; i++){
+            curr[0] = i;
             for(int j = 1 ; j <= n ; j++){
                 if(s.charAt(i-1) == t.charAt(j-1)){
-                    dp[i][j] = dp[i-1][j-1];
+                    curr[j] = prev[j-1];
                 } else{
-                    int insert = 1 + dp[i][j-1];
-                    int delete = 1 + dp[i-1][j];
-                    int replace = 1 + dp[i-1][j-1];
-                    dp[i][j] = Math.min(insert , Math.min(replace , delete));
+                    int insert = 1 + curr[j-1];
+                    int delete = 1 + prev[j];
+                    int replace = 1 + prev[j-1];
+                    curr[j] = Math.min(insert , Math.min(replace , delete));
                 }
             }
+            prev = curr.clone();
         }
 
-        return dp[m][n];
+        return prev[n];
 
     }
 
