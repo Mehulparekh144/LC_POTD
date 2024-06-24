@@ -1,28 +1,25 @@
 class Solution {
-    int[] dp;
     public int numDecodings(String s) {
-        dp = new int[s.length()];
-        Arrays.fill(dp , -1);
-        return solve(0 , s);
-    }
+        int[] dp = new int[s.length() + 1];
 
-    private int solve(int i , String s){
-        
-        if(i == s.length()){
-            return 1;
+        dp[s.length()] = 1;
+
+        for(int i = s.length() - 1 ; i >= 0 ; i--){
+            if(s.charAt(i) == '0'){
+                continue;
+            }
+
+            int step1 = dp[i+1];
+            int step2 = 0;
+            if(i+1 < s.length() && (s.charAt(i) == '1' || (s.charAt(i) == '2' && s.charAt(i+1) < '7')))
+            {
+                step2 = dp[i+2];
+            }
+
+            dp[i] = step1 + step2;
         }
 
-        if(s.charAt(i) == '0') return 0;
+        return dp[0];
 
-        if(dp[i] != -1) return dp[i];
-
-        int step1 = solve(i+1 , s);
-        int step2 = 0;
-
-        if(i+1 < s.length() && (s.charAt(i) == '1' || (s.charAt(i) == '2' && s.charAt(i+1) < '7'))){
-            step2 = solve(i+2 , s);
-        }
-
-        return dp[i] = step1 + step2;
     }
 }
