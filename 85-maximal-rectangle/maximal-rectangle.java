@@ -22,49 +22,30 @@ class Solution {
 
     private int maximumAreaOfHistogram(int[] histogram) {
         int n = histogram.length;
-        int[] nsr = new int[n];
-        int[] nsl = new int[n];
-
         Stack<Integer> st = new Stack<>();
+        int max = Integer.MIN_VALUE;
 
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i <= n; i++) {
 
-            while (!st.isEmpty() && histogram[st.peek()] >= histogram[i]) {
-                st.pop();
-            }
+            while(!st.isEmpty() && (i == n || histogram[st.peek()] >= histogram[i])){
+                
+                int h = histogram[st.pop()];
+                int w = 0;
+                if(st.isEmpty()){
+                    w = i; 
+                } else{
+                    w = i - st.peek() - 1;
+                }
 
-            if (st.isEmpty()) {
-                nsl[i] = -1;
-            } else {
-                nsl[i] = st.peek();
-            }
-
-            st.push(i);
-        }
-
-        st = new Stack<>();
-
-        for (int i = n - 1; i >= 0; i--) {
-            while (!st.isEmpty() && histogram[st.peek()] >= histogram[i]) {
-                st.pop();
-            }
-
-            if (st.isEmpty()) {
-                nsr[i] = n;
-            } else {
-                nsr[i] = st.peek();
+                int area = h*w;
+                max = Math.max(area , max);
             }
 
             st.push(i);
         }
 
-        int maxArea = Integer.MIN_VALUE;
-        for (int i = 0; i < n; i++) {
-            int area = (nsr[i] - nsl[i] - 1) * histogram[i];
-            if (area > maxArea)
-                maxArea = area;
-        }
+        return max;
 
-        return maxArea;
+
     }
 }
