@@ -1,24 +1,21 @@
 class Solution {
-    int[] dp;
     public int maxSumAfterPartitioning(int[] arr, int k) {
-        dp = new int[arr.length];
-        Arrays.fill(dp , -1);
-        return solve(0 , arr , k);
-    }
+        int[] dp = new int[arr.length + 1];
 
-    private int solve(int i , int[] arr , int k){
-        if(i == arr.length) return 0;
+        for(int i = arr.length - 1 ; i >= 0 ; i--){
+            int maxi = Integer.MIN_VALUE;
+            for(int j = i ; j < i + k && j < arr.length ; j++){
+                int sum = getSum(arr , i , j) + dp[j+1];
+                if(sum > maxi) maxi = sum;
+            }
 
-        if(dp[i] != -1) return dp[i];
-
-        int maxi = Integer.MIN_VALUE;
-        for(int j = i ; j < i + k && j < arr.length ; j++){
-            int sum = getSum(arr , i , j) + solve(j+1 , arr , k);
-            if(sum > maxi) maxi = sum;
+            dp[i] = maxi;
         }
 
-        return dp[i] = maxi;
+        return dp[0];
     }
+
+    
 
     private int getSum(int[] arr , int i , int j){
         int maxi = Integer.MIN_VALUE;
