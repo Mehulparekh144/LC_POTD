@@ -1,15 +1,20 @@
 class Solution {
     public int minAddToMakeValid(String s) {
-        Stack<Character> st = new Stack<>();
+        int open = 0;
+        int close = 0;
 
         for(char c : s.toCharArray()){
-            if(!st.isEmpty() && c == ')' && st.peek() == '('){
-                st.pop();
+            if(c == '('){
+                open++;
             } else{
-                st.push(c);
+                if(open > 0){
+                    open--; // closing paranthesis
+                } else{
+                    close++; // extra closing paranthesis
+                }
             }
         }
 
-        return st.size();
+        return open + close;
     }
 }
