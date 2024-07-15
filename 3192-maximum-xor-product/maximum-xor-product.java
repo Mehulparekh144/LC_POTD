@@ -7,8 +7,8 @@ class Solution {
 
     // Setting 49 to n bits in aXorx and bXorx
     for (long i = 49; i >= n; i--) {
-      boolean isA = ((a >> i) & 1) > 0;
-      boolean isB = ((b >> i) & 1) > 0;
+      boolean isA = (a & (1L << i)) > 0;
+      boolean isB = (b & (1L << i)) > 0;
 
       if (isA) {
         aXorx = (aXorx ^ (1L << i));
