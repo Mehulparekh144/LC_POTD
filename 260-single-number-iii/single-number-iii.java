@@ -19,7 +19,7 @@ class Solution {
         int groupB = 0;
 
         for(int num : nums){
-          if((num & (1 << setBit)) == 0){
+          if((num & (1 << setBit) )== 0){
             groupA ^= num;
           } else{
             groupB ^= num;
