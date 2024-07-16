@@ -15,9 +15,11 @@
  */
 class Solution {
   public String getDirections(TreeNode root, int startValue, int destValue) {
-    // Find the startValue
+    // Find the LCA Crucial Point
     TreeNode curr = findLCA(root , startValue, destValue);
+    // Find path from LCA -> Start
     StringBuilder start = new StringBuilder();
+    // Find path from LCA ->> Dest
     StringBuilder end = new StringBuilder();
     findPath(curr, startValue, start);
     findPath(curr, destValue, end);
