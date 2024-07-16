@@ -22,7 +22,7 @@ class Solution {
   }
 
   private boolean isPossible(int maxWeight, int days, int[] weights) {
-    int count = 0;
+    int count = 1;
     int sum = 0;
     for (int weight : weights) {
       sum += weight;
@@ -31,8 +31,6 @@ class Solution {
         sum = weight;
       }
     }
-
-    count++;
 
     return count <= days;
   }
