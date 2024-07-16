@@ -14,83 +14,60 @@
  * }
  */
 class Solution {
-	class Pair{
-		int node;
-		String direction;
+  public String getDirections(TreeNode root, int startValue, int destValue) {
+    // Find the startValue
+    TreeNode curr = findLCA(root , startValue, destValue);
+    StringBuilder start = new StringBuilder();
+    StringBuilder end = new StringBuilder();
+    findPath(curr, startValue, start);
+    findPath(curr, destValue, end);
 
-		public Pair(int node , String direction){
-			this.node = node;
-			this.direction = direction;
-		}
+    StringBuilder pathUp = new StringBuilder();
+    for (int i = 0; i < start.length(); i++) {
+      pathUp.append('U');
+    }
 
-		@Override
-		public String toString() {
-			return "Pair{" +
-					"node=" + node +
-					", direction='" + direction + '\'' +
-					'}';
-		}
-	}
+    return pathUp.toString() + end.toString();
+  }
 
-	public String getDirections(TreeNode root, int startValue, int destValue) {
-		// Number of nodes
-		int n = countNodes(root);
+  private TreeNode findLCA(TreeNode root , int p , int q){
+    if(root == null || root.val == p || root.val == q){
+      return root;
+    }
 
-		// Creating Graph
-		List<List<Pair>> adj = new ArrayList<>();
-		for(int i = 0 ; i <= n ; i++){
-			adj.add(new ArrayList<>());
-		}
+    TreeNode left = findLCA(root.left , p , q);
+    TreeNode right = findLCA(root.right , p , q);
 
-		TreeNode curr = root;
-		dfs(curr , adj);
-
-		Queue<Pair> q = new LinkedList<>();
-		boolean[] visited = new boolean[n+1];
-		q.add(new Pair(startValue , ""));
-		visited[startValue] = true;
-
-		while(!q.isEmpty()){
-			Pair currPair = q.poll();
-			if(currPair.node == destValue){
-				return currPair.direction;
-			}
-			for(Pair p : adj.get(currPair.node)){
-				if(!visited[p.node]){
-					visited[p.node] = true;
-					q.add(new Pair(p.node , currPair.direction + p.direction));
-				}
-			}
-		}
-
-		return "";
+    if(left != null && right != null){
+      return root;
+    } else if(left == null){
+      return right;
+    } else{
+      return left;
+    }
+  }
 
 
-	}
+  private boolean findPath(TreeNode node, int val, StringBuilder path) {
+    if (node == null) {
+      return false;
+    }
+    if (node.val == val) {
+      return true;
+    }
 
-	private void dfs(TreeNode curr , List<List<Pair>> adj){
-		if(curr == null){
-			return;
-		}
+    path.append("L");
+    if(findPath(node.left , val , path)){
+      return true;
+    }
+    path.deleteCharAt(path.length() - 1);
 
-		if(curr.left != null){
-			adj.get(curr.val).add(new Pair(curr.left.val , "L"));
-			adj.get(curr.left.val).add(new Pair(curr.val , "U"));
-			dfs(curr.left , adj);
-		}
+    path.append("R");
+    if(findPath(node.right , val , path)){
+      return true;
+    }
+    path.deleteCharAt(path.length() - 1);
 
-		if(curr.right != null){
-			adj.get(curr.val).add(new Pair(curr.right.val , "R"));
-			adj.get(curr.right.val).add(new Pair(curr.val , "U"));
-			dfs(curr.right , adj);
-		}
-	}
-
-	private int countNodes(TreeNode root ){
-		if(root == null){
-			return 0;
-		}
-
-		return 1 + countNodes(root.left) + countNodes(root.right);
-	}
+    return false;
+  }
 }
