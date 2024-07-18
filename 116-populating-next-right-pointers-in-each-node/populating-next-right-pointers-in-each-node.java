@@ -22,44 +22,27 @@ class Node {
 */
 
 class Solution {
-  class Pair{
-    Node node;
-    int level;
-
-    public Pair(Node node , int level){
-      this.node = node;
-      this.level = level;
+  public Node connect(Node root) {
+    if(root == null){
+      return null;
     }
-  }
-    public Node connect(Node root) {
-      if(root == null){
-        return null;
+    Node curr = root;
+    Node nxt = root.left;
+
+    while(curr != null && nxt != null){
+      curr.left.next = curr.right;
+
+      if(curr.next != null){
+        curr.right.next = curr.next.left;
       }
-        Queue<Pair> q = new LinkedList<>();
-        q.offer(new Pair(root , 0));
 
-        while(!q.isEmpty()){
-
-          Pair p = q.poll();
-          Node node = p.node;
-          int level = p.level;
-
-          if(q.isEmpty() || q.peek().level != level){
-            node.next = null;
-          } else{
-            node.next = q.peek().node;
-          }
-
-          if(node.left != null)
-          {
-            q.offer(new Pair(node.left , level + 1));
-          } 
-
-          if(node.right != null){
-            q.offer(new Pair(node.right , level + 1 ));
-          }
-        }
-
-        return root;
+      curr = curr.next;
+      if(curr == null){
+        curr = nxt;
+        nxt = curr.left;
+      }
     }
+
+    return root;
+  }
 }
