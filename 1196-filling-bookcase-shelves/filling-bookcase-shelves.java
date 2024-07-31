@@ -1,34 +1,27 @@
 class Solution {
-    int[][] dp;
-    public int minHeightShelves(int[][] books, int shelfWidth) {
-      dp = new int[books.length][shelfWidth + 1];
-      for(int[] row : dp) Arrays.fill(row , -1);
-      return solve(books.length-1 , books , shelfWidth);
-    }
+  public int minHeightShelves(int[][] books, int shelfWidth) {
+    int[] dp = new int[books.length+1];
+    dp[0] = 0;
 
-    private int solve(int i , int[][] books , int maxW ){
-      if(i < 0){
-        return 0;
-      }
-
-      if(dp[i][maxW] != -1){
-        return dp[i][maxW];
-      }
-
-      int np = solve(i-1 , books , maxW) + books[i][1];
+    for (int i = 1; i <= books.length; i++) {
+      int np = books[i-1][1] + dp[i - 1];
       int p = Integer.MAX_VALUE;
       int width = 0;
       int height = 0;
-      for(int j = i ; j >= 0 ; j--){
-        width += books[j][0];
 
-        if(width > maxW) break;
+      for (int j = i; j > 0; j--) {
+        width += books[j-1][0];
+        if (width > shelfWidth)
+          break;
 
-        height=  Math.max(height , books[j][1]);
-        p = Math.min(p , height + solve(j-1 , books , maxW));
-        
+        height = Math.max(height, books[j-1][1]);
+        p = Math.min(p, height + dp[j - 1]);
       }
 
-      return dp[i][maxW] = Math.min(p , np);
+      dp[i] = Math.min(p, np);
     }
+
+    return dp[books.length];
+  }
+
 }
