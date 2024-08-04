@@ -1,24 +1,28 @@
 class Solution {
     private static final int MOD = (int)1e9 + 7;
     public int rangeSum(int[] nums, int n, int left, int right) {
-        List<Integer> l = new ArrayList<>();
+      PriorityQueue<int[]> pq = new PriorityQueue<>((a,b) -> a[0] - b[0]);
+      
+      for(int i = 0 ; i < n ; i++){
+        pq.offer(new int[]{nums[i] , i});
+      }
 
-        for(int i = 0 ; i < n ; i++){
-          int sum = 0;
-          for(int j = i ; j < n ; j++){
-            sum += nums[j];
-            l.add(sum);
-          }
+      int res = 0;
+
+      for(int i = 1 ; i <= right ; i++){
+        int[] p = pq.poll();
+
+        if(i >= left){
+          res = (res + p[0])%MOD;
         }
 
-        Collections.sort(l);
-
-        int res = 0;
-        for(int i = left ; i <= right ; i++){
-          res += l.get(i-1);
-          res %= MOD;
+        if(p[1] < n-1){
+          p[1]++;
+          p[0] += nums[p[1]];
+          pq.offer(new int[]{p[0] , p[1]});
         }
+      }
 
-        return res%MOD;
+      return res;
     }
 }
