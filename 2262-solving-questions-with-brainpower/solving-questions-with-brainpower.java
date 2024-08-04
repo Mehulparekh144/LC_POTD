@@ -1,18 +1,19 @@
 class Solution {
-    long[] dp;
-    public long mostPoints(int[][] questions) {
-      dp = new long[questions.length + 1];
-      Arrays.fill(dp , -1);
-      return solve(0 , questions);   
+
+  public long mostPoints(int[][] questions) {
+    long[] dp = new long[questions.length + 1];
+
+
+    for (int i = questions.length - 1 ; i >= 0 ; i--) {
+      long np = dp[i + 1];
+      long p = questions[i][0];
+      if (i + questions[i][1] + 1 < questions.length) {
+        p += dp[i + questions[i][1] + 1];
+      }
+      dp[i] = Math.max(np, p);
     }
 
-    private long solve(int i , int[][] questions){
-      if(i >= questions.length) return 0;
+    return dp[0];
+  }
 
-      if(dp[i] != -1) return dp[i];
-
-      long np = solve(i+1 , questions);
-      long p = questions[i][0] + solve(i + questions[i][1] + 1 , questions);
-      return dp[i] = Math.max(p , np);
-    }
 }
