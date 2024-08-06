@@ -3,55 +3,56 @@ import java.util.Map;
 
 class Solution {
   private static final int MOD = (int) 1e9 + 7;
-  private Map<String, Integer> map;
-  private static int[][] MOVES = {
-     {2, 1}, {2, -1}, {-2, 1}, {-2, -1},
-    {1, 2}, {1, -2}, {-1, 2}, {-1, -2}
+  private static final int[][] MOVES = {
+      { 2, 1 }, { 2, -1 }, { -2, 1 }, { -2, -1 },
+      { 1, 2 }, { 1, -2 }, { -1, 2 }, { -1, -2 }
   };
 
   public int knightDialer(int n) {
-    map = new HashMap<>();
+    if (n == 1)
+      return 10;
 
-    int res = 0;
+    int[][][] dp = new int[4][3][n + 1];
 
-    for(int i = 0 ; i < 4 ; i++){
-      for(int j = 0 ; j < 3 ; j++){
-        if(isValid(i , j)){
-          res = (res + solve(i , j , n))%MOD;
+    for (int i = 0; i < 4; i++) {
+      for (int j = 0; j < 3; j++) {
+        if (isValid(i, j)) {
+          dp[i][j][1] = 1;
         }
       }
     }
 
-    return res;
-
-  }
-
-  private int solve(int i, int j, int n) {
-
-    if (n == 1) {
-      return 1;
-    }
-
-    String key = i + "_" + j + "_" + n;
-    if (map.containsKey(key))
-      return map.get(key);
-
-    int res = 0;
-
-    for(int[] move : MOVES){
-      int i1 = i + move[0];
-      int j1 = j + move[1];
-
-      if(isValid(i1 , j1)){
-        res = (res + solve(i1 , j1 , n-1))%MOD;
+    for (int len = 2; len <= n; len++) {
+      for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 3; j++) {
+          if (isValid(i, j)) {
+            int count = 0;
+            for (int[] move : MOVES) {
+              int ni = i + move[0];
+              int nj = j + move[1];
+              if (isValid(ni, nj)) {
+                count = (count + dp[ni][nj][len - 1]) % MOD;
+              }
+            }
+            dp[i][j][len] = count;
+          }
+        }
       }
     }
-    
-    map.put(key, res);
-    return res;
+
+    int result = 0;
+    for (int i = 0; i < 4; i++) {
+      for (int j = 0; j < 3; j++) {
+        if (isValid(i, j)) {
+          result = (result + dp[i][j][n]) % MOD;
+        }
+      }
+    }
+
+    return result;
   }
 
-  private boolean isValid(int i , int j){
+  private boolean isValid(int i, int j) {
     return (i >= 0 && j >= 0 && i < 4 && j < 3 && (i != 3 || j != 0) && (i != 3 || j != 2));
   }
 }
