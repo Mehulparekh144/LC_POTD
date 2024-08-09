@@ -1,23 +1,18 @@
 class Solution {
   public long maxAlternatingSum(int[] nums) {
-    long[][] dp = new long[nums.length + 1][2];
+    long evenSum = 0;
+    long oddSum = 0;
 
-    for(int i = nums.length - 1 ; i >= 0 ; i--){
-      for(int isPos = 1 ; isPos >= 0 ; isPos--){
-        long np = dp[i+1][isPos];
+    for(int i = nums.length-1 ; i >= 0 ; i--){
+      long nes = Math.max(evenSum , oddSum + nums[i]);
+      long nos = Math.max(oddSum , evenSum - nums[i]);
 
-        long p = 0;
-        if(isPos == 1){
-          p = nums[i] + dp[i+1][0];
-        } else{
-          p = -nums[i] + dp[i+1][1];
-        }
-
-        dp[i][isPos] = Math.max(p , np);
-      }
+      evenSum = nes;
+      oddSum = nos;
     }
 
-    return dp[0][1];
+    return evenSum;
+
   }
 
 }
