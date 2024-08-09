@@ -1,25 +1,23 @@
 class Solution {
-  long[][] dp;
   public long maxAlternatingSum(int[] nums) {
-    dp = new long[nums.length][2];
-    for(long[] row : dp ) Arrays.fill(row , -1);
-    return solve(0, 1, nums);
-  }
+    long[][] dp = new long[nums.length + 1][2];
 
-  private long solve(int i, int isPos, int[] nums) {
-    if (i >= nums.length)
-      return 0;
+    for(int i = nums.length - 1 ; i >= 0 ; i--){
+      for(int isPos = 1 ; isPos >= 0 ; isPos--){
+        long np = dp[i+1][isPos];
 
-    if(dp[i][isPos] != -1) return dp[i][isPos];
-    long np = solve(i + 1, isPos, nums);
+        long p = 0;
+        if(isPos == 1){
+          p = nums[i] + dp[i+1][0];
+        } else{
+          p = -nums[i] + dp[i+1][1];
+        }
 
-    long p = 0;
-    if (isPos == 1) {
-      p = nums[i] + solve(i + 1, 0, nums);
-    } else {
-      p = -nums[i] + solve(i + 1, 1, nums);
+        dp[i][isPos] = Math.max(p , np);
+      }
     }
 
-    return dp[i][isPos] = Math.max(p, np);
+    return dp[0][1];
   }
+
 }
