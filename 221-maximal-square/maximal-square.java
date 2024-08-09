@@ -3,24 +3,27 @@ class Solution {
     int m = matrix.length;
     int n = matrix[0].length;
     int max = 0;
-    int[][] dp = new int[m][n];
+    int[] prev = new int[n];
 
     for (int i = 0; i < m; i++) {
+      int[] curr = new int[n];
       for (int j = 0; j < n; j++) {
         if (matrix[i][j] == '1') {
 
           if (i == 0 || j == 0) {
-            dp[i][j] = 1;
+            curr[j] = 1;
           } else {
-            int up = dp[i - 1][j];
-            int left = dp[i][j - 1];
-            int diag = dp[i - 1][j - 1];
+            int up = prev[j];
+            int left = curr[j - 1];
+            int diag = prev[j - 1];
 
-            dp[i][j] = Math.min(up, Math.min(left, diag)) + 1;
+            curr[j] = Math.min(up, Math.min(left, diag)) + 1;
           }
-          max = Math.max(dp[i][j], max);
+          max = Math.max(curr[j], max);
         }
       }
+
+      prev = curr.clone();
     }
 
     return max * max;
