@@ -2,21 +2,24 @@ class Solution {
   private static final int MOD = (int) 1e9 + 7;
 
   public int numRollsToTarget(int n, int k, int target) {
-    int[][] dp = new int[n + 1][target + 1];
+    int[] prev = new int[target + 1];
+    int[] curr;
 
-    dp[0][0] = 1;
+    prev[0] = 1;
 
     for (int i = 1; i <= n; i++) {
+      curr = new int[target + 1];
       for (int t = 0; t <= target; t++) {
         for (int x = 1; x <= k; x++) {
           if(t < x) continue;
-          dp[i][t] = (dp[i][t] + dp[i-1][t - x])%MOD;
+          curr[t] = (curr[t] + prev[t - x])%MOD;
         }
-
       }
+
+      prev = curr.clone();
     }
 
-    return dp[n][target];
+    return prev[target];
   }
 
   // private int solve(int n, int k, int target) {
