@@ -23,10 +23,12 @@ class Solution {
         }
 
         // Choose new song
+        // we have n - oldSongs to choose from
         long res = (n - oldSongs) * solve(n, goal - 1, oldSongs + 1, k) % MOD;
 
         // Choose old song
         if (oldSongs > k) {
+          // We have oldSongs - k songs to choose from
             res = (res + (oldSongs - k) * solve(n, goal - 1, oldSongs, k) % MOD) % MOD;
         }
 
