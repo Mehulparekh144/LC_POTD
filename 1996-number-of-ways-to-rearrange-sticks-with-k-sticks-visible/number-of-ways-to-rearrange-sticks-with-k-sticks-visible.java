@@ -5,17 +5,19 @@
 class Solution {
   private final static int MOD = (int) 1e9 + 7;
   public int rearrangeSticks(int n, int k) {
-    long[][] dp = new long[n + 1][k + 1];
-
-    dp[1][1] = 1;
+    long[] prev = new long[k + 1];
+    long[] curr = new long[k+1];
+    prev[1] = 1;
 
     for(int i = 2 ; i <= n ; i++){
       for(int j = 1 ; j <= k ; j++){
-        dp[i][j] = dp[i-1][j-1] + (i-1)*dp[i-1][j];
-        dp[i][j] %= MOD;
+        curr[j] = prev[j-1] + (i-1)*prev[j];
+        curr[j] %= MOD;
       }
+
+      prev = curr.clone();
     }
 
-    return (int) dp[n][k];
+    return (int) prev[k];
   }
 }
