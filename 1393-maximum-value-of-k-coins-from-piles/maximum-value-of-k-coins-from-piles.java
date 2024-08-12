@@ -1,32 +1,29 @@
 class Solution {
   int[][] dp;
-    public int maxValueOfCoins(List<List<Integer>> piles, int k) {
-        dp = new int[piles.size()][k+1];
-        for(int[] row : dp){
-          Arrays.fill(row , -1);
+
+  public int maxValueOfCoins(List<List<Integer>> piles, int k) {
+    dp = new int[piles.size() + 1][k + 1];
+
+    for (int i = piles.size() - 1; i >= 0; i--) {
+      for (int k1 = 1; k1 <= k; k1++) {
+
+        int np = dp[i + 1][k1];
+        int p = 0;
+        int total = 0;
+        List<Integer> pile = piles.get(i);
+
+        for (int j = 1; j <= Math.min(k1, pile.size()); j++) {
+          total += pile.get(j - 1);
+          p = Math.max(p, total + dp[i+1][k1-j]);
         }
-        return solve(0 , piles , k);
-    }
 
-    private int solve(int i , List<List<Integer>> piles , int k){
-      if(i >= piles.size() || k <= 0){
-        return 0;
+        dp[i][k1] = Math.max(p, np);
+
       }
 
-      if(dp[i][k] != -1) return dp[i][k];
-
-      int np = solve(i+1 , piles , k);
-      int p = 0;
-
-      int total = 0;
-      List<Integer> pile = piles.get(i);
-
-      for(int j = 1 ; j <= Math.min(k, pile.size()) ; j++){
-        total += pile.get(j - 1);
-        p = Math.max(p ,total + solve(i+1 , piles , k - j));
-      }
-
-      return dp[i][k] = Math.max(p , np);
-
     }
+
+    return dp[0][k];
+  }
+
 }
