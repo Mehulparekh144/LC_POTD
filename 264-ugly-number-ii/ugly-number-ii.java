@@ -1,31 +1,29 @@
 class Solution {
   public int nthUglyNumber(int n) {
-    Set<Long> s = new HashSet<>();
-    PriorityQueue<Long> pq = new PriorityQueue<>();
+    List<Long> arr = new ArrayList<>(List.of(1L));
+    int i2 = 0 , i3 = 0 , i5 = 0;
 
-    int[] factors = {2,3,5};
-    pq.offer(1L);
+    for(int i = 1 ; i <= n ; i++){
+      long next = Math.min(
+        Math.min(arr.get(i2) * 2 , arr.get(i3)*3 ),
+        arr.get(i5)*5
+      );
 
+      arr.add(next);
+      if(next == arr.get(i2)*2){
+       i2++;
+      }
 
-    //O(3n)
-    for(int i = 0 ; i < n ; i++){
-      long num = pq.poll();
+      if(next == arr.get(i3)*3){
+       i3++;
+      }
 
-      if(i == n-1) return (int) num;
-
-      for(int f : factors){
-        if(!s.contains(f*num)){
-          s.add(num*f);
-          //O(logn)
-          pq.offer(num*f);
-        }
+      if(next == arr.get(i5)*5){
+       i5++;
       }
 
     }
 
-    return -1;
-
-    //TC - O(nlogn)
-
+    return (int)(long) arr.get(n-1);
   }
 }
