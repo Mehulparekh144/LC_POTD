@@ -6,6 +6,8 @@ class Solution {
     int[] factors = {2,3,5};
     pq.offer(1L);
 
+
+    //O(3n)
     for(int i = 0 ; i < n ; i++){
       long num = pq.poll();
 
@@ -14,6 +16,7 @@ class Solution {
       for(int f : factors){
         if(!s.contains(f*num)){
           s.add(num*f);
+          //O(logn)
           pq.offer(num*f);
         }
       }
@@ -21,6 +24,8 @@ class Solution {
     }
 
     return -1;
+
+    //TC - O(nlogn)
 
   }
 }
