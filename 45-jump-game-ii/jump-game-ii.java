@@ -1,21 +1,28 @@
 class Solution {
     public int jump(int[] nums) {
       int n = nums.length;
-      int[] dp = new int[n];
+      int l = 0;
+      int r = 0;
 
-      for(int i = n-2 ; i >= 0 ; i--){
-        int jump = (int) 1e9;
-        for(int j = 1 ; j <= nums[i] ; j++){
-          if(i+j < nums.length){
-            jump = Math.min(jump , 1 + dp[i+j] );
-          }
-          
+      int reachable = 0;
+      int jumps = 0 ;
+
+      while(r < n-1){
+        
+        for(int i = l ; i < r + 1 ; i++){
+          reachable = Math.max(
+            reachable,
+            i + nums[i]
+          );
         }
 
-        dp[i] = jump;
+        l = r + 1;
+        r = reachable;
+        jumps++;
+
       }
 
-      return dp[0];
+      return jumps;
     }
 
     
