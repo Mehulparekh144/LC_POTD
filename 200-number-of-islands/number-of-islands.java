@@ -9,7 +9,7 @@ class Solution {
       for(int i = 0 ; i < m ; i++){
         for(int j = 0 ; j < n ; j++){
           if(grid[i][j] == '1'){
-            dfs(i , j , grid);
+            bfs(i , j , grid);
             count++;
           }
         }
@@ -18,15 +18,29 @@ class Solution {
       return count;
     }
 
-    private void dfs(int i , int j , char[][] grid){
-      if(i < 0 || j < 0 || i >= m || j >= n || grid[i][j] == '0' ) return;
+    private void bfs(int i , int j , char[][] grid){
+      int[][] dirs = { 
+        {0,1} , {0,-1} , {1,0} , {-1 , 0}
+       };
 
-      grid[i][j] = '0';
+       Queue<int[]> q = new LinkedList<>();
+       q.offer(new int[]{i , j});
 
-      dfs(i+1 , j , grid);
-      dfs(i-1 , j , grid);
-      dfs(i , j+1 , grid);
-      dfs(i , j-1 , grid);
+       while(!q.isEmpty()){
+        int[] p = q.poll();
+        int r = p[0] , c = p[1];
 
+        for(int[] dir : dirs){
+          int newr = r + dir[0];
+          int newc = c + dir[1];
+
+          if(newr < 0 || newc < 0 || newr >= m || newc >= n || grid[newr][newc] != '1') continue;
+
+          grid[newr][newc] = '0';
+          q.offer(new int[]{newr , newc});
+        }
+       }
     }
+
+
 }
