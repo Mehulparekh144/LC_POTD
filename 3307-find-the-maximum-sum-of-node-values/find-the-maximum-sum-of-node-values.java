@@ -2,24 +2,29 @@ class Solution {
     public long maximumValueSum(int[] nums, int k, int[][] edges) {
       
       int n = nums.length;
-      long[] delta = new long[n];
+      int count = 0;
+      long sum = 0;
 
-      for(int i = 0 ; i < n ; i++){
-        delta[i] = (nums[i]^k) - nums[i];
-      }
+      // Calculate the minimum value to be subtracted.
+      // If there are odd number of count that means one is not an edge. So we have to minus it so that's why we keep min inorder to minus it with the sum as we dnt consider it
 
-      Arrays.sort(delta);
-      long res = 0;
+      long min = Integer.MAX_VALUE;
+
       for(int num : nums){
-        res += num;
+        if((num^k) > num){
+          count++;
+          sum += num^k;
+        } else{
+          sum += num;
+        }
+
+        min = Math.min(min , Math.abs((num^k) - num));
       }
 
-      for(int i = nums.length - 1 ; i > 0 ; i-=2){
-        long buffer = delta[i] + delta[i - 1];
-        if(buffer <= 0) break;
-        res += buffer;
+      if(count%2 == 0){
+        return sum;
       }
 
-      return res;
+      return sum - min;
     }
 }
