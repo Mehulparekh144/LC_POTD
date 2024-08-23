@@ -1,7 +1,6 @@
 class Solution {
     public boolean canFinish(int numCourses, int[][] prerequisites) {
-      boolean[] vis = new boolean[numCourses];
-      boolean[] path = new boolean[numCourses];
+      int[] indegree = new int[numCourses];
 
       List<List<Integer>> adj = new ArrayList<>();
       for(int i = 0 ; i < numCourses ; i++){
@@ -10,35 +9,35 @@ class Solution {
 
       for(int[] edge : prerequisites){
         adj.get(edge[1]).add(edge[0]);
+        indegree[edge[0]]++;
       }
 
+      Queue<Integer> q = new LinkedList<>();
       for(int i = 0 ; i < numCourses ; i++){
-        if(dfs(i , vis , path , adj)){
-          return false;
+        if(indegree[i] == 0){
+          q.offer(i);
         }
       }
 
-      return true;
-    }
+      int count = 0;
 
-    // Checks cycle
-    private boolean dfs(int i , boolean[] vis , boolean[] path , List<List<Integer>> adj){
-      vis[i] = true;
-      path[i] = true;
+      while(!q.isEmpty()){
+        int node = q.poll();
+        count++;
 
-      for(int child : adj.get(i)){
-        if(!vis[child]){
-          if(dfs(child , vis , path , adj)){
-            return true;
+        for(int child : adj.get(node)){
+          indegree[child]--;
+          if(indegree[child] == 0){
+            q.offer(child);
           }
         }
-
-        if(path[child]){
-          return true;
-        }
       }
 
-      path[i] = false;
-      return false;
+      return count == numCourses;
+
+
+
     }
+
+
 }
