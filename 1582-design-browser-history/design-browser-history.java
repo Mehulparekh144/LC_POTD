@@ -1,44 +1,35 @@
-class ListNode{
-  String val;
-  ListNode prev;
-  ListNode next;
-
-  public ListNode(String val){
-    this.val = val;
-  }
-}
-
 class BrowserHistory {
-    ListNode head;
-
+    List<String> list;
+    int total;
+    int curr;
     public BrowserHistory(String homepage) {
-      head = new ListNode(homepage);
+        list = new ArrayList<>();
+        list.add(homepage);
+        // Current pointer
+        curr = 1;
+        // Total size
+        total = 1;
     }
     
     public void visit(String url) {
-      ListNode newNode = new ListNode(url);
-      head.next = newNode;
-      newNode.prev = head;
+        if(list.size() > curr){
+          list.set(curr , url);
+        } else{
+          list.add(url);
+        }
 
-      head = head.next;
+        curr++;
+        total = curr;
     }
     
     public String back(int steps) {
-      while(head.prev != null && steps > 0){
-        head = head.prev;
-        steps--;
-      }
-
-      return head.val;
+      curr = Math.max(1 , curr - steps);
+      return list.get(curr - 1);
     }
     
     public String forward(int steps) {
-      while(head.next != null && steps > 0){
-        head = head.next;
-        steps--;
-      }
-
-      return head.val;
+      curr = Math.min(total , curr + steps);
+      return list.get(curr - 1);
     }
 }
 
