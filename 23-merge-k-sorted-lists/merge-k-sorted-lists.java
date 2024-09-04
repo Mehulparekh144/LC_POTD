@@ -34,32 +34,15 @@ class Solution {
     }
 
     public ListNode mergeTwo(ListNode l1, ListNode l2){
-      ListNode dummy = new ListNode(0);
-      ListNode curr = dummy;
+      if(l1 == null) return l2;
+      if(l2 == null) return l1;
 
-      while(l1 != null && l2 != null){
-        if(l1.val > l2.val){
-          curr.next = new ListNode(l2.val);
-          l2 = l2.next;
-        } else{
-          curr.next = new ListNode(l1.val);
-          l1 = l1.next;
-        }
-
-        curr = curr.next;
+      if(l1.val < l2.val){
+        l1.next = mergeTwo(l1.next , l2);
+        return l1;
+      } else{
+        l2.next = mergeTwo(l1 , l2.next);
+        return l2;
       }
-
-      if(l1 != null){
-        curr.next = l1;
-        curr = curr.next;
-      }
-
-      if(l2 != null){
-        curr.next = l2;
-        curr = curr.next;
-      }
-
-      return dummy.next;
-
     }
 }
