@@ -1,55 +1,51 @@
 class Twitter {
-  Map<Integer, HashSet<Integer>> followers;
+
+  int time;
   Map<Integer, List<int[]>> tweets;
-  int timer;
+  Map<Integer, Set<Integer>> followers;
 
   public Twitter() {
+    time = 0;
     followers = new HashMap<>();
     tweets = new HashMap<>();
-    timer = 0;
   }
 
   public void postTweet(int userId, int tweetId) {
-    if (!tweets.containsKey(userId)) {
-      tweets.put(userId, new ArrayList<>());
-    }
-    tweets.get(userId).add(new int[] { tweetId, timer++ });
+    tweets.computeIfAbsent(userId, k -> new ArrayList<>()).add(new int[] { tweetId, time++ });
   }
 
   public List<Integer> getNewsFeed(int userId) {
     PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> b[1] - a[1]);
+
     if (tweets.containsKey(userId)) {
       for (int[] tweet : tweets.get(userId)) {
         pq.offer(tweet);
       }
     }
 
-    if (followers.containsKey(userId) && !followers.get(userId).isEmpty()) {
-      for (int id : followers.get(userId)) {
-        if (tweets.containsKey(id)) {
-          for (int[] tweet : tweets.get(id)) {
+    if (followers.containsKey(userId)) {
+      for (int follower : followers.get(userId)) {
+        if (tweets.containsKey(follower)) {
+          for (int[] tweet : tweets.get(follower)) {
             pq.offer(tweet);
           }
         }
       }
-
     }
 
+    int k = 10;
     List<Integer> res = new ArrayList<>();
-    int k = 0;
-    while (!pq.isEmpty() && k < 10) {
+    while (k > 0 && !pq.isEmpty()) {
       res.add(pq.poll()[0]);
-      k++;
+      k--;
     }
 
     return res;
+
   }
 
   public void follow(int followerId, int followeeId) {
-    if (!followers.containsKey(followerId)) {
-      followers.put(followerId, new HashSet<>());
-    }
-    followers.get(followerId).add(followeeId);
+    followers.computeIfAbsent(followerId, k -> new HashSet<>()).add(followeeId);
   }
 
   public void unfollow(int followerId, int followeeId) {
