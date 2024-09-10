@@ -14,8 +14,10 @@ class Solution {
     int t = 0;
 
     for (int i = 0; i < tasks.length; i++) {
-      t = Math.max(t, i);
+      // Example t is 5 and next seconds is 7 you have to skip 2 seconds in between so we take max
+      t = Math.max(t , i);
 
+      // If available servers is empty t has to wait for first unavailable server to be available
       if (available.isEmpty()) {
         t = unavailable.peek()[0];
       }
