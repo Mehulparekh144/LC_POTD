@@ -1,12 +1,13 @@
 class Solution {
+    List<List<Integer>> res;
     public List<List<Integer>> permute(int[] nums) {
-        List<List<Integer>> res = new ArrayList<>();
-        solve(res , nums , new ArrayList<>());
+        res = new ArrayList<>();
+        solve(nums , res , new ArrayList<>());
         return res;
     }
 
-    private void solve(List<List<Integer>> res , int[] nums , List<Integer> temp){
-      if(temp.size() == nums.length){
+    private void solve(int[] nums , List<List<Integer>> res , List<Integer> temp){
+      if(nums.length == temp.size()){
         res.add(new ArrayList<>(temp));
         return;
       }
@@ -14,7 +15,7 @@ class Solution {
       for(int num : nums){
         if(temp.contains(num)) continue;
         temp.add(num);
-        solve(res , nums , temp);
+        solve(nums , res , temp);
         temp.removeLast();
       }
     }
