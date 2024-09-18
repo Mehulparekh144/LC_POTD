@@ -1,17 +1,26 @@
 class Solution {
-List<List<String>> res;
+  List<List<String>> res;
+  boolean[] cols;
+  boolean[] tld;
+  boolean[] bld;
+
   public List<List<String>> solveNQueens(int n) {
     char[][] board = new char[n][n];
     res = new ArrayList<>();
     for (char[] row : board)
       Arrays.fill(row, '.');
 
+    
+    cols = new boolean[n];
+    tld = new boolean[2*n];
+    bld = new boolean[2*n];
+
     solve(0, board);
     return res;
   }
 
   private void solve(int j, char[][] board) {
-    if (j == board.length){
+    if (j == board.length) {
       res.add(construct(board));
       return;
     }
@@ -19,13 +28,20 @@ List<List<String>> res;
     for (int i = 0; i < board.length; i++) {
       if (isSafe(i, j, board)) {
         board[i][j] = 'Q';
+        cols[i] = true;
+        tld[i+j] = true;
+        bld[i-j+board.length] = true;
+
         solve(j + 1, board);
         board[i][j] = '.';
+        cols[i] = false;
+        tld[i+j] = false;
+        bld[i-j+board.length] = false;
       }
     }
   }
 
-  private List<String> construct(char[][] board){
+  private List<String> construct(char[][] board) {
     List<String> newBoard = new ArrayList<>();
 
     for (char[] chars : board) {
@@ -40,44 +56,6 @@ List<List<String>> res;
   }
 
   private boolean isSafe(int i, int j, char[][] board) {
-    int n = board.length;
-    int i1 = i;
-    int j1 = j;
-
-    // We have to check 8 directions to place a queen but some of them there is no need to check. 
-    // Up and down is not needed as only one queen will be placed in a column
-    // right top diagonal , right and right bottom diagonal too as no queen as been placed at that column yet
-    // SO that's why we check top left diagonal , left and top right diagonal only
-
-    while (i1 >= 0 && j1 >= 0) {
-      if (board[i1][j1] == 'Q')
-        return false;
-      i1--;
-      j1--;
-    }
-
-
-    i1 = i;
-    j1 = j;
-
-    while (j1 >= 0) {
-      if (board[i1][j1] == 'Q') {
-        return false;
-      }
-      j1--;
-    }
-
-    i1 = i;
-    j1 = j;
-
-    while (i1 < n && j1 >= 0) {
-      if (board[i1][j1] == 'Q')
-        return false;
-      i1++;
-      j1--;
-    }
-
-    return true;
-
+    return !cols[i] && !tld[i+j] && !bld[i-j + board.length];
   }
 }
