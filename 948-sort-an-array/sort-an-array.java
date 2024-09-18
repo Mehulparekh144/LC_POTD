@@ -1,44 +1,42 @@
 class Solution {
-    public int[] sortArray(int[] nums) {
-        return mergeSort(nums , 0 , nums.length - 1);
+  public int[] sortArray(int[] nums) {
+    int n = nums.length;
+
+    for (int i = n / 2 - 1; i >= 0; i--) {
+      heapify(n, nums, i);
     }
 
-    private int[] mergeSort(int[] nums , int l , int r){
-      if (l == r) {
-            return new int[] { nums[l] };
-        }
-      int m = (l + r) >> 1;
-
-      int[] left = mergeSort(nums , l , m);
-      int[] right = mergeSort(nums , m+1 , r);
-
-      return merge(left , right);
+    for (int i = n - 1; i >= 0; i--) {
+      swap(i, 0, nums);
+      heapify(i, nums, 0);
     }
 
-    private int[] merge(int[] left , int[] right){
-      int m = left.length , n = right.length;
-      int[] combined = new int[m + n];
-      int i = 0 , j = 0 , idx = 0;
+    return nums;
+  }
 
-      while(i < m && j < n){
-        if(left[i] < right[j]){
-          combined[idx++] = left[i];
-          i++;
-        }  else{
-          combined[idx++] = right[j];
-          j++;
-        }
-      }
+  private void heapify(int n, int[] nums, int i) {
+    int largest = i;
+    int l = 2 * i + 1;
+    int r = 2 * i + 2;
 
-      while(i < m){
-        combined[idx++] = left[i++];
-      }
-
-      while(j < n){
-        combined[idx++] = right[j++];
-      }
-
-      return combined;
+    if (l < n && nums[l] > nums[largest]) {
+      largest = l;
     }
+
+    if (r < n && nums[r] > nums[largest]) {
+      largest = r;
+    }
+
+    if(largest != i){
+      swap(i , largest , nums);
+      heapify(n , nums  , largest);
+    }
+  }
+
+  private void swap(int i, int j, int[] nums) {
+    int temp = nums[i];
+    nums[i] = nums[j];
+    nums[j] = temp;
+  }
 
 }
