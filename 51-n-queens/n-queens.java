@@ -1,75 +1,83 @@
 class Solution {
-  List<List<String>> res;
-    public List<List<String>> solveNQueens(int n) {
-        res = new ArrayList<>();
+List<List<String>> res;
+  public List<List<String>> solveNQueens(int n) {
+    char[][] board = new char[n][n];
+    res = new ArrayList<>();
+    for (char[] row : board)
+      Arrays.fill(row, '.');
 
-        char[][] board = new char[n][n];
-        for(char[] row : board){
-          Arrays.fill(row , '.');
-        }
+    solve(0, board);
+    return res;
+  }
 
-        solve(0 , board);
-        return res;
-
+  private void solve(int j, char[][] board) {
+    if (j == board.length){
+      res.add(construct(board));
+      return;
     }
 
-    private void solve(int col , char[][] board){
-      if(col == board.length){
-        res.add(construct(board));
-        return;
-      }
-
-      for(int row = 0 ; row < board.length ; row++){
-        if(isSafe(row , col , board)){
-          board[row][col] = 'Q';
-          solve(col + 1 , board);
-          board[row][col] = '.';
-        }
+    for (int i = 0; i < board.length; i++) {
+      if (isSafe(i, j, board)) {
+        board[i][j] = 'Q';
+        solve(j + 1, board);
+        board[i][j] = '.';
       }
     }
+  }
 
-    private boolean isSafe(int row , int col , char[][] board){
-      int row_ = row;
-      int col_ = col;
+  private List<String> construct(char[][] board){
+    List<String> newBoard = new ArrayList<>();
 
-      while(row_ >= 0 && col_ >= 0){
-        if(board[row_][col_] == 'Q'){
-          return false;
-        }
-        row_--;
-        col_--;
+    for (char[] chars : board) {
+      StringBuilder s = new StringBuilder();
+      for (int j = 0; j < board.length; j++) {
+        s.append(chars[j]);
       }
+      newBoard.add(s.toString());
+    }
 
-      row_ = row;
-      col_ = col;
+    return newBoard;
+  }
 
-      while(col_ >= 0){
-        if(board[row_][col_] == 'Q'){
-          return false;
-        }
-        col_--;
-      }
+  private boolean isSafe(int i, int j, char[][] board) {
+    int n = board.length;
+    int i1 = i;
+    int j1 = j;
 
-      row_ = row;
-      col_ = col;
+    // We have to check 8 directions to place a queen but some of them there is no need to check. 
+    // Up and down is not needed as only one queen will be placed in a column
+    // right top diagonal , right and right bottom diagonal too as no queen as been placed at that column yet
+    // SO that's why we check top left diagonal , left and top right diagonal only
 
-      while(row_ < board.length  && col_ >= 0 ){
-        if(board[row_][col_] == 'Q'){
-          return false;
-        }
-        row_++;
-        col_--;
-      }
-
-      return true;
+    while (i1 >= 0 && j1 >= 0) {
+      if (board[i1][j1] == 'Q')
+        return false;
+      i1--;
+      j1--;
     }
 
 
-    private List<String> construct(char[][] board){
-      List<String> temp = new ArrayList<>();
-      for(int i = 0 ; i < board.length ; i++){
-        temp.add(String.valueOf(board[i]));
+    i1 = i;
+    j1 = j;
+
+    while (j1 >= 0) {
+      if (board[i1][j1] == 'Q') {
+        return false;
       }
-      return temp;
+      j1--;
     }
+
+    i1 = i;
+    j1 = j;
+
+    while (i1 < n && j1 >= 0) {
+      if (board[i1][j1] == 'Q')
+        return false;
+      i1++;
+      j1--;
+    }
+
+    return true;
+
+  }
 }
