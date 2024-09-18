@@ -28,8 +28,11 @@ class Solution {
     for (int i = 0; i < board.length; i++) {
       if (isSafe(i, j, board)) {
         board[i][j] = 'Q';
+        // Check the row. There might be confusion here as in why we check cols[i] and not cols[j] because at this stage we are checking for jth column only and since we go from 0th column to jth jth won't be filled before
         cols[i] = true;
+        // Top left
         tld[i+j] = true;
+        // Top right
         bld[i-j+board.length] = true;
 
         solve(j + 1, board);
