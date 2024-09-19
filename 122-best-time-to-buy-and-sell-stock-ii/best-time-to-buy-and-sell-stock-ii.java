@@ -1,17 +1,29 @@
 class Solution {
-    public int maxProfit(int[] prices) {
-        int[][] dp = new int[prices.length + 1][2];
+  int[][] dp;
+  public int maxProfit(int[] prices) {
+    dp = new int[prices.length][2];
+    for(int[] row : dp) Arrays.fill(row , -1);
+    return solve(0, prices, 1);
+  }
 
-        for(int i = prices.length - 1 ; i >= 0 ; i--){
-            for(int buy = 1 ; buy >= 0 ; buy--){
-                if(buy == 1 ){
-                    dp[i][buy] = Math.max(dp[i+1][1] , dp[i+1][0] - prices[i]);
-                } else{
-                    dp[i][buy] = Math.max(dp[i+1][0] , dp[i+1][1] + prices[i]);
-                }
-            }
-        }
+  private int solve(int i, int[] prices, int buy) {
+    if (i == prices.length)
+      return 0;
+    
+    if(dp[i][buy] != -1) return dp[i][buy];
 
-        return dp[0][1];
+    int cost = 0;
+    if (buy == 1) {
+      cost = Math.max(
+          solve(i + 1, prices, 1),
+          solve(i + 1, prices, 0) - prices[i]);
+    } else {
+      cost = Math.max(
+        solve(i+1 , prices , 0),
+        solve(i+1 , prices , 1) + prices[i]
+      );
     }
+
+    return dp[i][buy] = cost;
+  }
 }
