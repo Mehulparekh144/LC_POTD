@@ -1,20 +1,17 @@
 class Solution:
     def rob(self, nums: List[int]) -> int:
         n = len(nums)
-        dp = [-1]*n
+        dp = [0]*n
 
-        def dfs(i):
-            if i >= len(nums):
-                return 0
-            
-            if dp[i] != -1:
-                return dp[i]
+        dp[n-1] = nums[n-1]
+        dp[n-2] = max(nums[n-2] , nums[n-1])
 
-            take = nums[i] + dfs(i+2)
-            not_take = dfs(i+1)
+        if n == 2:
+            return max(dp[n-1] , dp[n-2])
 
+        for i in range(n-3 , -1 , -1):
+            take = nums[i] + dp[i+2]
+            not_take = dp[i+1]
             dp[i] = max(take , not_take)
-            return dp[i]
         
-        return dfs(0)
-        
+        return dp[0]
