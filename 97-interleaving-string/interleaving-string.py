@@ -6,23 +6,18 @@ class Solution:
 
         if m + n != l:
             return False
-
-        @cache
-        def dfs(i , j , k):
-            if i == m and j == n and k == l:
-                return True
-            
-            if k >= l:
-                return False
-            
-            if i < m and s1[i] == s3[k]:
-                if dfs(i+1 , j , k+1):
-                    return True
-            
-            if j < n and s2[j] == s3[k]:
-                if dfs(i , j+1 , k+1):
-                    return True
-            
-            return False
         
-        return dfs(0 , 0 , 0)
+        dp = [[0 for _ in range(n+1)] for _ in range(m+1)]
+        dp[m][n] = True
+
+        for i in range(m , -1 , -1):
+            for j in range(n , -1 , -1):
+
+                k = i + j
+                if i < m and s1[i] == s3[k]:
+                    dp[i][j] = dp[i][j] or dp[i+1][j]
+                
+                if j < n and s2[j] == s3[k]:
+                    dp[i][j] = dp[i][j] or dp[i][j+1]
+
+        return dp[0][0] 
