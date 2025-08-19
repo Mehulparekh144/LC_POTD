@@ -6,10 +6,10 @@ class Solution:
         while l < r:
             m = l + (r-l)//2
 
-            if nums[m] <= nums[r]:
+            if nums[m] <= nums[r]: #Normal condition so go on the left
                 r = m 
             else:
-                l = m + 1
+                l = m + 1 #Go on the left as we are closer to the rotatedt start
         
         return nums[l]
         
