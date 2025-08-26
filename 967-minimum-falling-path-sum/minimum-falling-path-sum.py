@@ -3,22 +3,22 @@ class Solution:
         n = len(matrix)
         res = float('inf')
 
-        dp = [[0 for _ in range(n)] for _ in range(n)]
-
-        for j in range(n):
-            dp[n-1][j] = matrix[n-1][j]
+        dp = matrix[n-1][:]
+        curr = [0] * n
         
         for i in range(n-2 , -1 , -1):
             for j in range(n-1, -1 , -1):
-                dp[i][j] = matrix[i][j] + min(
-                    dp[i+1][j],
-                    dp[i+1][j-1] if j-1 >= 0 else float('inf'),
-                    dp[i+1][j+1] if j+1 < n else float('inf') 
+                curr[j] = matrix[i][j] + min(
+                    dp[j],
+                    dp[j-1] if j-1 >= 0 else float('inf'),
+                    dp[j+1] if j+1 < n else float('inf') 
                 )
+            
+            dp = curr[:]
 
 
         for j in range(n):
-            res = min(res , dp[0][j])
+            res = min(res , dp[j])
         
         return res
         
