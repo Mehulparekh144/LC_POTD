@@ -1,15 +1,14 @@
 class Solution:
     def minimumTotal(self, triangle: List[List[int]]) -> int:
-        
-        @cache
-        def solve(i, j):
-            if i < 0 or j < 0 or  i >= len(triangle) or j >= len(triangle[i]):
-                return float('inf')
-            
-            if i == len(triangle) - 1:
-                return triangle[i][j]
 
-            return triangle[i][j] + min(solve(i+1, j+1) , solve(i+1, j)) 
+        dp = [[0 for _ in range(len(triangle[i]))] for i in range(len(triangle)) ]
+
+        for j in range(len(triangle[-1])):
+            dp[-1][j] = triangle[-1][j]
+
+        for i in range(len(triangle) - 2, -1, -1):
+            for j in range(i , -1 , -1):
+                dp[i][j] = triangle[i][j] + min(dp[i+1][j+1] , dp[i+1][j]) 
         
-        return solve(0, 0)
+        return dp[0][0]
         
