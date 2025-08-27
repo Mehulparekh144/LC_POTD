@@ -1,13 +1,13 @@
 class Solution:
     def lengthOfLIS(self, nums: List[int]) -> int:
         n = len(nums)
-        dp = [1]*n
+
+        dp = [1 for _ in range(n)]
 
         for i in range(n):
-            for prev in range(i):
-                if nums[i] > nums[prev] and 1 + dp[prev] > dp[i]:
-                    dp[i] = 1 + dp[prev]
+            for j in range(i):
+                if nums[j] < nums[i] and dp[i] < 1 + dp[j]:
+                    dp[i] = 1 + dp[j]
         
         return max(dp)
-
         
